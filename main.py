@@ -14,9 +14,10 @@ app.include_router(loan_router)
 # User Routes
 @app.post("/signup", response_model=User)
 def signup(user: User):
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    with session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
     return user
 
 if __name__ == "__main__":

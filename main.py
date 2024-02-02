@@ -1,8 +1,10 @@
 from fastapi import FastAPI
+from sqlmodel import Session
 from src.sqlmodel.models.user import User
-from src.db import create_db_and_tables, session
+from src.db.initialize import create_db_and_tables, engine
 from src.routers.loans import loan_router
 
+create_db_and_tables()
 app = FastAPI()
 
 @app.get("/")
@@ -14,11 +16,8 @@ app.include_router(loan_router)
 # User Routes
 @app.post("/signup", response_model=User)
 def signup(user: User):
-    with session:
+    with Session(engine) as session:
         session.add(user)
         session.commit()
         session.refresh(user)
-    return user
-
-if __name__ == "__main__":
-    create_db_and_tables()
+        return user

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
+from sqlmodel import Session
+from src.db.initialize import engine
 from src.sqlmodel.models.loan import Loan
-from src.db import session
 
 loan_router = APIRouter(
     prefix="/loans",
@@ -8,12 +9,13 @@ loan_router = APIRouter(
 )
 
 # Create a loan
-@loan_router.post("/create")
+@loan_router.post("/create/", response_model=Loan)
 def create_loan(loan: Loan):
-    session.add(loan)
-    session.commit()
-    session.refresh()
-    return loan
+    with Session(engine) as session:
+        session.add(loan)
+        session.commit()
+        session.refresh(loan)
+        return loan
 
 # Fetch a loan schedule
 # Fetch a loan summary for a specific month

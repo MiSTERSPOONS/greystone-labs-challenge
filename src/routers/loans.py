@@ -1,5 +1,5 @@
-from typing import Annotated, List
-from fastapi import APIRouter, Request, Query
+from typing import List
+from fastapi import APIRouter
 from sqlmodel import Session, select, col
 from src.db.initialize import engine
 from src.sqlmodel.models.loan import Loan

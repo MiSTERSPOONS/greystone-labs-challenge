@@ -34,16 +34,16 @@ REST API for a Loan Amortization app using the python miniframework [FastAPI](ht
 
 - [x] Create a user
 - [x] Create loan
-- [ ] Fetch loan schedule
+- [x] Fetch loan schedule
 - [ ] Fetch loan summary for a specific month
 - [x] Fetch all loans for a user
 - [ ] Share loan with another user
 
 ### A loan record should at least contain the following fields: 
 
-- [ ] Amount
-- [ ] Annual Interest Rate
-- [ ] Loan Term in months
+- [x] Amount
+- [x] Annual Interest Rate
+- [x] Loan Term in months
 
 ### The loan schedule endpoint should return an array of length loan_term, consisting of:
 ```code

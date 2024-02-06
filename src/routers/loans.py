@@ -15,6 +15,12 @@ loan_router = APIRouter(
 @loan_router.post("/create/", response_model=Loan)
 def create_loan(loan: Loan):
     with Session(engine) as session:
+        statement = select(Loan).where(col(Loan.user_id) == loan.user_id)
+        results = session.exec(statement).all()
+
+        if not results:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cannot create Loan for non-existent user") 
+
         session.add(loan)
         session.commit()
         session.refresh(loan)

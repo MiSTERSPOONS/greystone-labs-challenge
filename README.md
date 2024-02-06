@@ -37,7 +37,7 @@ REST API for a Loan Amortization app using the python miniframework [FastAPI](ht
 - [x] Fetch loan schedule
 - [x] Fetch loan summary for a specific month
 - [x] Fetch all loans for a user
-- [ ] Share loan with another user
+- [x] Share loan with another user
 
 ### A loan record should at least contain the following fields: 
 

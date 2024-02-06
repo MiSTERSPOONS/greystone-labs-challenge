@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, col, select
 from main import app
 from src.db.initialize import engine
-from src.sqlmodel.models.loan import Loan
 from src.sqlmodel.models.user import User
 
 client = TestClient(app)

@@ -39,6 +39,32 @@ async def fetch_loan_schedule(
         return loan_schedule
 
 # Fetch a loan summary for a specific month
+@loan_router.get('/summary/')
+def fetch_loan_summary(
+    loan_id: int,
+    month: int
+):
+    with Session(engine) as session:
+        statement = select(Loan).where(col(Loan.loan_id) == loan_id)
+        results = session.exec(statement).all()
+        loan = results[0]
+
+        loan_schedule = LoanAmortizationCalculator.calculate_loan_schedule(
+            loan.loan_amount,
+            loan.loan_term_months,
+            loan.annual_interest_rate
+        )
+
+        loan_schedule_for_given_month = loan_schedule[month-1]
+
+        loan_summary = LoanAmortizationCalculator.calculate_loan_summary(
+            loan.loan_amount,
+            loan.annual_interest_rate,
+            loan_schedule_for_given_month
+        )
+
+        return loan_summary
+
 # Fetch all loans for a user
 @loan_router.get("/all/", response_model=List[Loan])
 async def fetch_all_user_loans(

@@ -1,6 +1,9 @@
+import numpy as np
+import numpy_financial as npf
 from decimal import Decimal
 from typing import List
 from src.sqlmodel.models.loan_schedule import LoanSchedule
+from src.sqlmodel.models.loan_summary import LoanSummary
 
 class LoanAmortizationCalculator():
     '''
@@ -169,3 +172,32 @@ class LoanAmortizationCalculator():
             principal_balance = new_principal_balance
         return results
 
+    @staticmethod
+    def calculate_loan_summary(
+        loan_amount: Decimal,
+        annual_interest_rate: Decimal,
+        loan_schedule: LoanSchedule
+    ) -> LoanSummary:
+        """Calculates the loan summary schedule
+
+        Returns
+        -------
+        LoanSummary
+        {
+            current_principal_balance: Current principal balance at given month
+            total_principal_paid: The aggregate amount of principal already paid
+            total_interest_paid: The aggregate amount of interest already paid
+        }
+        """
+        monthly_interest_rate = LoanAmortizationCalculator.calculate_monthly_interest_rate(annual_interest_rate / 100)
+        total_principal_paid = loan_amount - loan_schedule['remaining_balance']
+
+        value = (loan_amount * ((1 + monthly_interest_rate) ** loan_schedule['month']))
+        future_value = loan_schedule['monthly_payment'] * (LoanAmortizationCalculator.get_amortized_denominator(annual_interest_rate / 100, loan_schedule['month']) / monthly_interest_rate)
+        balance_owed = round(value - future_value, 2)
+
+        return {
+            'current_principal_balance': balance_owed,
+            'total_principal_paid': total_principal_paid,
+            'total_interest_paid': (loan_schedule['monthly_payment'] * loan_schedule['month']) - total_principal_paid
+        }

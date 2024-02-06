@@ -26,6 +26,9 @@ This server using the [FastAPI](https://fastapi.tiangolo.com/) python framework 
     - `app`: the object created inside of main.py with the line app = FastAPI().
     - `--reload`: make the server restart after code changes. Only do this for development.
 
+## Running tests
+All tests are under the `/tests/` directory. Simply navigate to the root directory and run `pytests`
+
 ## Loan Amortization App
 REST API for a Loan Amortization app using the python miniframework [FastAPI](https://fastapi.tiangolo.com/).
 

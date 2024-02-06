@@ -4,6 +4,7 @@ from sqlmodel import Session, select, col
 from src.db.initialize import engine
 from src.sqlmodel.models.loan import Loan
 from src.sqlmodel.models.loan_schedule import LoanSchedule
+from src.sqlmodel.models.loan_share import LoanShare
 from src.utils.loan_amortization_calculation import LoanAmortizationCalculator
 
 loan_router = APIRouter(
@@ -91,4 +92,14 @@ async def fetch_all_user_loans(
         statement = select(Loan).where(col(Loan.user_id) == user_id)
         results = session.exec(statement).all()
         return results
+
 # Share loan with another user
+@loan_router.post("/share/", response_model=LoanShare)
+async def create_share_loan(
+    loan_share: LoanShare
+):
+    with Session(engine) as session:
+        session.add(loan_share)
+        session.commit()
+        session.refresh(loan_share)
+        return loan_share

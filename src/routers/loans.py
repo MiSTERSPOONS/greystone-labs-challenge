@@ -98,7 +98,28 @@ async def fetch_all_user_loans(
 async def create_share_loan(
     loan_share: LoanShare
 ):
+    if loan_share.source_user_id == loan_share.target_user_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Cannot share loan. Source and Target user are the same.") 
+
     with Session(engine) as session:
+        source_user_statement = select(User).where(col(User.user_id) == loan_share.source_user_id)
+        results = session.exec(source_user_statement).all()
+
+        if not results:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Cannot share loan. Source user does not exist.") 
+
+        target_user_statement = select(User).where(col(User.user_id) == loan_share.target_user_id)
+        results = session.exec(target_user_statement).all()
+
+        if not results:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Cannot share loan. Target user does not exist.") 
+        
+        loan_statement = select(LoanShare).where(col(Loan.loan_id) == loan_share.loan_id)
+        results = session.exec(loan_statement).all()
+
+        if results:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Duplicate loan found. Source and Target Users are already sharing this loan")
+
         session.add(loan_share)
         session.commit()
         session.refresh(loan_share)

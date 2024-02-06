@@ -1,4 +1,5 @@
-from pytest import approx, fixture
+from decimal import Decimal
+from pytest import approx
 from src.utils.loan_amortization_calculation import LoanAmortizationCalculator
 
 class TestLoanAmortizationCalculator:
@@ -58,3 +59,20 @@ class TestLoanAmortizationCalculator:
             TestLoanAmortizationCalculator.annual_interest_rate
         )
         assert len(loan_schedule) == TestLoanAmortizationCalculator.term_months
+
+    def test_calculate_loan_summary(self):
+        loan_summary = LoanAmortizationCalculator.calculate_loan_summary(
+            TestLoanAmortizationCalculator.principal_loan_balance,
+            TestLoanAmortizationCalculator.annual_interest_rate,
+            {
+                'month': 2,
+                'remaining_balance': 28820.47,
+                'monthly_payment': 664.03
+            }
+        )
+
+        print('The Loan Summary: ', loan_summary)
+
+        assert loan_summary['current_principal_balance'] == 28820.47
+        assert loan_summary['total_principal_paid'] == 1179.53
+        assert loan_summary['total_interest_paid'] == 148.53

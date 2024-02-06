@@ -63,7 +63,6 @@ class TestLoanAmortizationCalculator:
     def test_calculate_loan_summary(self):
         loan_summary = LoanAmortizationCalculator.calculate_loan_summary(
             TestLoanAmortizationCalculator.principal_loan_balance,
-            TestLoanAmortizationCalculator.annual_interest_rate,
             {
                 'month': 2,
                 'remaining_balance': 28820.47,

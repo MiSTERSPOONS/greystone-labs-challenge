@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
-from sqlmodel import Session, select, col
+from sqlmodel import Session, select
 from src.sqlmodel.models.user import User
 from src.db.initialize import create_db_and_tables, engine
 from src.routers.loans import loan_router

@@ -173,7 +173,6 @@ class LoanAmortizationCalculator():
     @staticmethod
     def calculate_loan_summary(
         loan_amount: Decimal,
-        annual_interest_rate: Decimal,
         loan_schedule: LoanSchedule
     ) -> LoanSummary:
         """Calculates the loan summary schedule
@@ -187,16 +186,11 @@ class LoanAmortizationCalculator():
             total_interest_paid: The aggregate amount of interest already paid
         }
         """
-        monthly_interest_rate = LoanAmortizationCalculator.calculate_monthly_interest_rate(annual_interest_rate / 100)
         total_principal_paid = round(loan_amount - loan_schedule['remaining_balance'], 2)
         total_interest_paid = round((loan_schedule['monthly_payment'] * loan_schedule['month']) - total_principal_paid, 2)
 
-        value = (loan_amount * ((1 + monthly_interest_rate) ** loan_schedule['month']))
-        future_value = loan_schedule['monthly_payment'] * (LoanAmortizationCalculator.get_amortized_denominator(annual_interest_rate / 100, loan_schedule['month']) / monthly_interest_rate)
-        balance_owed = round(value - future_value, 2)
-
         return {
-            'current_principal_balance': balance_owed,
+            'current_principal_balance': loan_schedule['remaining_balance'],
             'total_principal_paid': total_principal_paid,
             'total_interest_paid': total_interest_paid
         }

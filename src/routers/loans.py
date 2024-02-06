@@ -78,7 +78,6 @@ def fetch_loan_summary(
 
         loan_summary = LoanAmortizationCalculator.calculate_loan_summary(
             loan.loan_amount,
-            loan.annual_interest_rate,
             loan_schedule_for_given_month
         )
 

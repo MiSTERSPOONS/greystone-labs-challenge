@@ -57,6 +57,10 @@ def fetch_loan_summary(
     with Session(engine) as session:
         statement = select(Loan).where(col(Loan.loan_id) == loan_id)
         results = session.exec(statement).all()
+
+        if not results:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Loan summary does not exist") 
+
         loan = results[0]
 
         loan_schedule = LoanAmortizationCalculator.calculate_loan_schedule(
@@ -64,6 +68,9 @@ def fetch_loan_summary(
             loan.loan_term_months,
             loan.annual_interest_rate
         )
+
+        if month-1 < 0 or month > len(loan_schedule):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Loan summary for month: {month} does not exist") 
 
         loan_schedule_for_given_month = loan_schedule[month-1]
 

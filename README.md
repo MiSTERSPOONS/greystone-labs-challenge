@@ -35,7 +35,7 @@ REST API for a Loan Amortization app using the python miniframework [FastAPI](ht
 - [x] Create a user
 - [x] Create loan
 - [x] Fetch loan schedule
-- [ ] Fetch loan summary for a specific month
+- [x] Fetch loan summary for a specific month
 - [x] Fetch all loans for a user
 - [ ] Share loan with another user
 
@@ -56,6 +56,6 @@ REST API for a Loan Amortization app using the python miniframework [FastAPI](ht
 
 ### The loan summary endpoint should accept a month number as a parameter and return:
 
-- [ ] Current principal balance at given month
-- [ ] The aggregate amount of principal already paid
-- [ ] The aggregate amount of interest already paid
+- [x] Current principal balance at given month
+- [x] The aggregate amount of principal already paid
+- [x] The aggregate amount of interest already paid

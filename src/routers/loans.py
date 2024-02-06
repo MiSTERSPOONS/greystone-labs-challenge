@@ -28,6 +28,22 @@ def create_loan(loan: Loan):
         session.refresh(loan)
         return loan
 
+# Fetch all loans for a user
+@loan_router.get("/all/", response_model=List[Loan])
+async def fetch_all_user_loans(
+    user_id: int
+):
+    with Session(engine) as session:
+        user_statement = select(User).where(col(User.user_id) == user_id)
+        user_results = session.exec(user_statement).all()
+
+        if not user_results:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cannot fetch all loans. User does not exist.")
+
+        statement = select(Loan).where(col(Loan.user_id) == user_id)
+        results = session.exec(statement).all()
+        return results
+
 # Fetch a loan schedule
 @loan_router.get("/schedule/", response_model=List[LoanSchedule])
 async def fetch_loan_schedule(
@@ -82,16 +98,6 @@ def fetch_loan_summary(
         )
 
         return loan_summary
-
-# Fetch all loans for a user
-@loan_router.get("/all/", response_model=List[Loan])
-async def fetch_all_user_loans(
-    user_id: int
-):
-    with Session(engine) as session:
-        statement = select(Loan).where(col(Loan.user_id) == user_id)
-        results = session.exec(statement).all()
-        return results
 
 # Share loan with another user
 @loan_router.post("/share/", response_model=LoanShare)

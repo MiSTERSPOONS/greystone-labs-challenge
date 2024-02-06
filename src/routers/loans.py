@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from sqlmodel import Session, select, col
 from src.db.initialize import engine
 from src.sqlmodel.models.loan import Loan
@@ -28,6 +28,10 @@ async def fetch_loan_schedule(
     with Session(engine) as session:
         statement = select(Loan).where(col(Loan.loan_id) == loan_id)
         results = session.exec(statement).all()
+
+        if not results:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Loan schedule does not exist") 
+
         loan = results[0]
 
         loan_schedule = LoanAmortizationCalculator.calculate_loan_schedule(

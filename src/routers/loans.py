@@ -8,6 +8,9 @@ from src.sqlmodel.models.loan_share import LoanShare
 from src.sqlmodel.models.user import User
 from src.utils.loan_amortization_calculation import LoanAmortizationCalculator
 
+# Under normal circumstances, these routes would be protected by some kind of AuthGuard
+# Since Authentication/Authorization was out of scope for this challenge and due to time constraints
+# I've left out Authentication/Authorization for the following routes below
 loan_router = APIRouter(
     prefix="/loans",
     tags=["loans"]

@@ -5,6 +5,7 @@ from src.db.initialize import engine
 from src.sqlmodel.models.loan import Loan
 from src.sqlmodel.models.loan_schedule import LoanSchedule
 from src.sqlmodel.models.loan_share import LoanShare
+from src.sqlmodel.models.user import User
 from src.utils.loan_amortization_calculation import LoanAmortizationCalculator
 
 loan_router = APIRouter(
@@ -16,7 +17,7 @@ loan_router = APIRouter(
 @loan_router.post("/create/", response_model=Loan)
 def create_loan(loan: Loan):
     with Session(engine) as session:
-        statement = select(Loan).where(col(Loan.user_id) == loan.user_id)
+        statement = select(User).where(col(User.user_id) == loan.user_id)
         results = session.exec(statement).all()
 
         if not results:
